@@ -11,14 +11,14 @@ The unit of decision is not the task's *topic* — it's its **judgment load** (h
 
 ## The tiers
 
-| Tier | Claude Code `model` | API model string | Route here for | Don't route here for |
-|---|---|---|---|---|
-| **Haiku** | `haiku` | `claude-haiku-5-5` | Mechanical, well-specified, verifiable work: file search / grep, log & output scanning, format/text conversion, simple extraction or classification, boilerplate, deterministic transforms, cheap high-volume fan-out | Anything ambiguous or needing cross-context judgment — it will look confident and be wrong |
-| **Sonnet** *(default)* | `sonnet` | `claude-sonnet-5-5` | Most real work: feature implementation, in-component refactors, writing tests, drafting, moderate multi-step reasoning, standard analysis | Trivial fan-out (waste) or genuinely hard architecture |
-| **Opus** | `opus` | `claude-opus-5-5` | Hard reasoning: system architecture, debugging that spans many files/subsystems, ambiguous or underspecified planning, high-blast-radius or irreversible decisions — and running the orchestrator itself | Routine coding — it's overkill and you pay for it |
-| **Fable** | *(no alias — use full ID)* `claude-fable-5-1` | `claude-fable-5-1` | **Every code review and every security review, regardless of size** (standing policy); the top of the difficulty distribution; work in biology / cybersecurity / LLM-R&D where you want frontier capability with safety measures in place | General hard tasks that aren't reviews — marginal gain over Opus at higher cost and latency |
+| Tier | Claude Code `model` | Route here for | Don't route here for |
+|---|---|---|---|
+| **Haiku** | `haiku` | Mechanical, well-specified, verifiable work: file search / grep, log & output scanning, format/text conversion, simple extraction or classification, boilerplate, deterministic transforms, cheap high-volume fan-out | Anything ambiguous or needing cross-context judgment — it will look confident and be wrong |
+| **Sonnet** *(default)* | `sonnet` | Most real work: feature implementation, in-component refactors, writing tests, drafting, moderate multi-step reasoning, standard analysis | Trivial fan-out (waste) or genuinely hard architecture |
+| **Opus** | `opus` | Hard reasoning: system architecture, debugging that spans many files/subsystems, ambiguous or underspecified planning, high-blast-radius or irreversible decisions — and running the orchestrator itself | Routine coding — it's overkill and you pay for it |
+| **Fable** | `fable` | **Every code review and every security review, regardless of size** (standing policy); the top of the difficulty distribution; work in biology / cybersecurity / LLM-R&D where you want frontier capability with safety measures in place | General hard tasks that aren't reviews — marginal gain over Opus at higher cost and latency |
 
-`sonnet`/`opus`/`haiku` are family aliases that resolve to the current default in each family. Fable is Mythos-tier and has no short alias, so pin it by full ID. Pin full IDs anywhere you need version determinism.
+The four aliases resolve to the newest model in each family, so the Claude Code side needs no edit when a model changes. The API model IDs are in the `MODELS` table at the top of `scripts/route.py`. That table is the one source of the IDs. Pin a full ID only where you need a fixed version.
 
 ## The decision procedure
 
@@ -53,7 +53,7 @@ Full tables, local-model options, and the fallback procedure: `references/constr
 
 ```bash
 python scripts/route.py "refactor the auth middleware to support API keys" --files 3
-# -> tier=sonnet  model=claude-sonnet-5-5  effort=medium  reasons=[...]
+# -> tier=sonnet, its alias, its API model ID, effort=medium, reasons=[...]
 ```
 
 `route.py` is a transparent, dependency-free heuristic — import `route()` or run it as CLI. It returns the tier, both the Claude Code alias and the API string, a suggested `effort`, and the signals that fired, so every routing decision is explainable. Treat it as a floor: an Opus orchestrator reading the rubric will out-route the heuristic on genuinely novel tasks, but the script gives you determinism and a paper trail. Wiring and the Fable-redirect handling: `references/api-orchestration.md`.

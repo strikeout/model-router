@@ -18,7 +18,7 @@ CLI:
 Library:
     from route import route
     r = route("refactor auth middleware", files_touched=3)
-    r["model_api"]   # -> "claude-sonnet-5-5"
+    r["model_api"]   # -> the API model ID of the Sonnet tier
 """
 
 from __future__ import annotations
@@ -28,13 +28,13 @@ import json
 import re
 import sys
 
-# Edit these when the lineup changes. cc_alias is the Claude Code `model` value;
-# api is the model string for the /v1/messages endpoint.
+# This table is the one source of the API model IDs. Edit it when the lineup changes.
+# cc_alias is the Claude Code `model` value. api is the model ID for /v1/messages.
 MODELS = {
     "haiku":  {"cc_alias": "haiku",           "api": "claude-haiku-5-5",          "effort": "low"},
     "sonnet": {"cc_alias": "sonnet",          "api": "claude-sonnet-5-5",         "effort": "medium"},
     "opus":   {"cc_alias": "opus",            "api": "claude-opus-5-5",           "effort": "high"},
-    "fable":  {"cc_alias": "claude-fable-5-1",  "api": "claude-fable-5-1",            "effort": "high"},
+    "fable":  {"cc_alias": "fable",           "api": "claude-fable-5-1",          "effort": "high"},
 }
 ORDER = ["haiku", "sonnet", "opus", "fable"]
 

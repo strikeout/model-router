@@ -1,7 +1,7 @@
 ---
 name: fable-worker
 description: Frontier-tier worker (Mythos-class, with additional safety measures for biology, cybersecurity, and LLM R&D), AND the mandatory reviewer. Use for EVERY code review and security review — reviewing a diff, PR, branch, file or design for defects, regressions or vulnerabilities, plus security audits, threat models and vulnerability assessments — regardless of how small or simple the change looks. Also use for the very top of the difficulty distribution, and for work in the safety-hardened domains where you want maximum capability with the safeguards in place. For general hard tasks that are not reviews, prefer the Opus worker — Fable adds cost and latency for marginal gain outside its niche. A small fraction of Fable queries are redirected to Opus 4.8 by design; treat that as expected, not an error.
-model: claude-fable-5-1
+model: fable
 effort: high
 ---
 

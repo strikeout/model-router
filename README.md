@@ -11,14 +11,14 @@ The governing rule is "route down, escalate on evidence". The skill starts at a 
 
 ## The tiers
 
-| Tier | Claude Code `model` | API model ID | Use it for |
-|---|---|---|---|
-| Haiku | `haiku` | `claude-haiku-5-5` | Mechanical work with a clear specification and a cheap check: search, log scans, format conversion, simple extraction |
-| Sonnet (default) | `sonnet` | `claude-sonnet-5-5` | Most work: features, refactors in one component, tests, drafts, standard analysis |
-| Opus | `opus` | `claude-opus-5-5` | Hard reasoning: architecture, debugging across many files, plans with no clear specification, decisions that you cannot reverse. Opus also runs the orchestrator. |
-| Fable | `claude-fable-5-1` | `claude-fable-5-1` | All code reviews and security reviews, the hardest tasks, and work in biology, cybersecurity and LLM research |
+| Tier | Claude Code `model` | Use it for |
+|---|---|---|
+| Haiku | `haiku` | Mechanical work with a clear specification and a cheap check: search, log scans, format conversion, simple extraction |
+| Sonnet (default) | `sonnet` | Most work: features, refactors in one component, tests, drafts, standard analysis |
+| Opus | `opus` | Hard reasoning: architecture, debugging across many files, plans with no clear specification, decisions that you cannot reverse. Opus also runs the orchestrator. |
+| Fable | `fable` | All code reviews and security reviews, the hardest tasks, and work in biology, cybersecurity and LLM research |
 
-The `haiku`, `sonnet` and `opus` aliases follow the newest model in each family. Fable has no alias, so the skill pins Fable by its full ID.
+Each alias resolves to the newest model in its family. The `MODELS` table in `scripts/route.py` holds the API model ID of each tier.
 
 ## What the repository contains
 
@@ -30,7 +30,6 @@ The `haiku`, `sonnet` and `opus` aliases follow the newest model in each family.
 | `references/claude-code-setup.md` | The setup of the worker subagents in Claude Code |
 | `references/api-orchestration.md` | The integration with a custom API harness, and the Fable redirect |
 | `assets/agents/` | Four worker subagents, one for each tier |
-| `agents/` | A copy of `assets/agents/` |
 | `scripts/route.py` | A deterministic tier classifier with no dependencies |
 
 ## Install the skill
@@ -68,7 +67,7 @@ claude --model opus
 
 ```bash
 python3 scripts/route.py "refactor the auth middleware to support API keys" --files 3
-# tier=sonnet  cc=sonnet  api=claude-sonnet-5-5  effort=medium
+# The script prints the tier, the alias, the API model ID and the effort.
 ```
 
 The script accepts these options:
@@ -94,12 +93,14 @@ You can also import the function: `from route import route`. The script is a heu
 
 ## Update the model IDs
 
-When Anthropic releases new models, edit these locations:
+The Claude Code side uses aliases, so it needs no edit. The API model IDs are in one table.
 
-1. Edit the `MODELS` table in `scripts/route.py`.
-2. Edit the tier table in `SKILL.md`.
-3. Edit the tier table in this README.
-4. Edit the `model` field in `assets/agents/fable-worker.md` and `agents/fable-worker.md`.
+1. Edit the `api` values in the `MODELS` table in `scripts/route.py`.
+2. Run this command, and make sure that it shows only the new IDs:
+
+   ```bash
+   grep -rnoE 'claude-(haiku|sonnet|opus|fable)-[0-9-]+' . --exclude-dir=.git
+   ```
 
 ## License
 
