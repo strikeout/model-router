@@ -100,3 +100,7 @@ When Anthropic releases new models, edit these locations:
 2. Edit the tier table in `SKILL.md`.
 3. Edit the tier table in this README.
 4. Edit the `model` field in `assets/agents/fable-worker.md` and `agents/fable-worker.md`.
+
+## License
+
+The MIT License covers this repository. Read `LICENSE` for the full text.
